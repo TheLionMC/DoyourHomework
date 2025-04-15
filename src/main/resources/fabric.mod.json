@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "doyourhomework",
+	"version": "${version}",
+	"name": "doyourhomework",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/doyourhomework/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"client": [
+			"me.thelionmc.Doyourhomework"
+		],
+		"fabric-datagen": [
+			"me.thelionmc.DoyourhomeworkDataGenerator"
+		]
+	},
+	"mixins": [
+		"doyourhomework.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.13",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
