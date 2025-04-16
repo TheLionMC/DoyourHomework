@@ -44,8 +44,7 @@ public class LockoutScreen extends Screen {
         int x = (width - boxWidth) / 2;
         int y = (height - boxHeight) / 2;
 
-        context.fill(x, y, x + boxWidth, y + boxHeight, 0xAA000000);
-        context.drawCenteredTextWithShadow(textRenderer, Text.literal("You wanted to do something else now, time to take a break!."), width / 2, y + 20, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(textRenderer, Text.literal("You wanted to do something else now, time to take a break!"), width / 2, y + 20, 0xFFFFFF);
         context.drawCenteredTextWithShadow(textRenderer, Text.literal("Remember: " + SessionManager.getPostSessionReason()), width / 2, y + 50, 0x66FF66);
         context.getMatrices().pop();
 

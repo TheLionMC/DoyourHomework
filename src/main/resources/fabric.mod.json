@@ -1,15 +1,15 @@
 {
 	"schemaVersion": 1,
 	"id": "doyourhomework",
-	"version": "${version}",
-	"name": "doyourhomework",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"version": "1.0.0",
+	"name": "Do Your Homework",
+	"description": "Locks you out of Minecraft after your session ends. Includes friendly reminders and a reason input.",
 	"authors": [
-		"Me!"
+		"TheLionMC"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/TheLionMC",
+		"sources": "https://github.com/TheLionMC/doyourhomework"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/doyourhomework/icon.png",

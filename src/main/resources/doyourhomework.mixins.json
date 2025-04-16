@@ -3,7 +3,8 @@
 	"package": "me.thelionmc.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"ExampleMixin",
+		"ReminderHudMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

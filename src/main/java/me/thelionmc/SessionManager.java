@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Properties;
 
 public class SessionManager {
@@ -13,15 +14,35 @@ public class SessionManager {
 
 	private static boolean lockedForToday = false;
 	private static boolean initialPromptShown = false;
-	private static long sessionStartTime = 0;
+	static long sessionStartTime = 0;
 	private static long sessionDurationMillis = 0;
 	private static String postSessionReason = "";
+	private static int lastDayChecked = -1;
 
-	// For delayed lockout in singleplayer
 	public static boolean delayedLockout = false;
 	public static int lockoutDelayTicks = 0; // number of ticks to wait
 
 	private static Properties properties = new Properties();
+
+	public static void checkForNewDay() {
+		int currentDay = Instant.now().atZone(java.time.ZoneId.systemDefault()).getDayOfYear();
+		if (lastDayChecked == -1) {
+			lastDayChecked = currentDay;
+		} else if (currentDay != lastDayChecked) {
+			lastDayChecked = currentDay;
+			resetSessionForNewDay();  // This will unlock and reset session for the new day
+		}
+	}
+
+	private static void resetSessionForNewDay() {
+		// Unlock session for the new day
+		unlockForTomorrow(); // Unlocks the session when a new day is detected
+		initialPromptShown = false;
+		sessionStartTime = 0;
+		sessionDurationMillis = 0;
+		postSessionReason = "";
+		save();
+	}
 
 	public static void load() {
 		if (SESSION_FILE.exists()) {
@@ -46,7 +67,6 @@ public class SessionManager {
 			properties.setProperty("sessionDurationMillis", Long.toString(sessionDurationMillis));
 			properties.setProperty("postSessionReason", postSessionReason);
 
-			// Save the properties to the file
 			properties.store(fos, "Session Control Settings");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -69,10 +89,14 @@ public class SessionManager {
 
 	public static void startSession(int minutes, String reason) {
 		sessionStartTime = System.currentTimeMillis();
-		sessionDurationMillis = minutes * 60_000L; // Convert minutes to milliseconds
+		sessionDurationMillis = minutes * 60_000L;
 		postSessionReason = reason;
 		initialPromptShown = true;
 		save();
+	}
+
+	private static void sendChat(MinecraftClient client, String msg) {
+		ReminderOverlay.showReminder(msg, 5);
 	}
 
 	public static boolean isTimeUp() {
@@ -89,7 +113,15 @@ public class SessionManager {
 
 	public static void setPostSessionReason(String reason) {
 		postSessionReason = reason;
-		save(); // Optional, if you're persisting to file
+		save();
+	}
+
+	public static void setInitialPromptShown(boolean a) {
+		initialPromptShown = a;
+	}
+
+	public static long getsessiondurationmillis() {
+		return sessionDurationMillis;
 	}
 
 	public static String getPostSessionReason() {
