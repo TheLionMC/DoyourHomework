@@ -1,5 +1,6 @@
 package me.thelionmc;
 
+import com.ibm.icu.impl.CalendarAstronomer;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
@@ -18,6 +19,7 @@ public class SessionManager {
 	private static long sessionDurationMillis = 0;
 	private static String postSessionReason = "";
 	private static int lastDayChecked = -1;
+	private static boolean unlockingNow = false;
 
 	public static boolean delayedLockout = false;
 	public static int lockoutDelayTicks = 0; // number of ticks to wait
@@ -30,13 +32,12 @@ public class SessionManager {
 			lastDayChecked = currentDay;
 		} else if (currentDay != lastDayChecked) {
 			lastDayChecked = currentDay;
-			resetSessionForNewDay();  // This will unlock and reset session for the new day
+			resetSessionForNewDay();
 		}
 	}
 
 	private static void resetSessionForNewDay() {
-		// Unlock session for the new day
-		unlockForTomorrow(); // Unlocks the session when a new day is detected
+		unlockForTomorrow();
 		initialPromptShown = false;
 		sessionStartTime = 0;
 		sessionDurationMillis = 0;
@@ -126,5 +127,23 @@ public class SessionManager {
 
 	public static String getPostSessionReason() {
 		return postSessionReason;
+	}
+	public static void startUnlockChallenge() {
+		unlockingNow = true;
+	}
+
+	public static void finishUnlockChallenge() {
+		unlockingNow = false;
+		lockedForToday = false;
+		initialPromptShown = false;
+
+		sessionStartTime = 0;
+		sessionDurationMillis = 0;
+		save();
+	}
+
+
+	public static boolean isUnlockingNow() {
+		return unlockingNow;
 	}
 }

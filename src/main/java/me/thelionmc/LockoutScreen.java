@@ -9,6 +9,7 @@ import net.minecraft.text.Text;
 public class LockoutScreen extends Screen {
 
     private ButtonWidget quitButton;
+    private ButtonWidget mathUnlockButton;
 
     public LockoutScreen() {
         super(Text.literal("You're Done For Today"));
@@ -21,11 +22,16 @@ public class LockoutScreen extends Screen {
         int x = (width - buttonWidth) / 2;
         int y = (height - buttonHeight) / 2 + 100;
 
-        quitButton = ButtonWidget.builder(Text.literal("Go back to Focus"), button -> {
+        quitButton = ButtonWidget.builder(Text.literal("Quit Game"), button -> {
             MinecraftClient.getInstance().scheduleStop();
         }).dimensions(x, y, buttonWidth, buttonHeight).build();
+        addDrawableChild(quitButton);
 
-        this.addDrawableChild(quitButton);
+        mathUnlockButton = ButtonWidget.builder(Text.literal("❌"), button -> {
+            SessionManager.startUnlockChallenge();
+            MinecraftClient.getInstance().setScreen(new MathChallengeScreen(this));
+        }).dimensions(width - 30, 10, 20, 20).build();
+        addDrawableChild(mathUnlockButton);
     }
 
     @Override
@@ -47,7 +53,5 @@ public class LockoutScreen extends Screen {
         context.drawCenteredTextWithShadow(textRenderer, Text.literal("You wanted to do something else now, time to take a break!"), width / 2, y + 20, 0xFFFFFF);
         context.drawCenteredTextWithShadow(textRenderer, Text.literal("Remember: " + SessionManager.getPostSessionReason()), width / 2, y + 50, 0x66FF66);
         context.getMatrices().pop();
-
     }
-
 }

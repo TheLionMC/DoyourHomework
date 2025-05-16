@@ -1,5 +1,6 @@
 package me.thelionmc;
 
+import me.thelionmc.mixin.ReminderHudMixin;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -15,7 +16,9 @@ public class Doyourhomework implements ClientModInitializer {
 		SessionManager.load();
 		SessionManager.checkForNewDay();
 
+
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			ReminderManager.update();
 			if (sessionStartTime > 0 && getsessiondurationmillis() > 0) {
 				long now = System.currentTimeMillis();
 				long elapsed = now - sessionStartTime;
@@ -37,12 +40,11 @@ public class Doyourhomework implements ClientModInitializer {
 			if (client.currentScreen instanceof TitleScreen &&
 					!SessionManager.isInitialPromptShown() &&
 					!SessionManager.isLockedForToday()) {
-				System.out.println("Displaying StartUpPromptScreen");
 				client.execute(() -> client.setScreen(new StartUpPromptScreen()));
 				SessionManager.setInitialPromptShown(true);
 			}
 
-			if (SessionManager.isTimeUp()) {
+			if (SessionManager.isTimeUp() && !SessionManager.isUnlockingNow()) {
 				SessionManager.lockUntilTomorrow();
 				client.execute(() -> {
 					if (client.getNetworkHandler() != null) {

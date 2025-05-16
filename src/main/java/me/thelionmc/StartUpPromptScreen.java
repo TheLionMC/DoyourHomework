@@ -32,6 +32,8 @@ public class StartUpPromptScreen extends Screen {
             String reason = textBox.getText();
             SessionManager.setPostSessionReason(reason);
             SessionManager.startSession(mins, reason);
+            ReminderManager.reset();
+            ReminderManager.startSession(System.currentTimeMillis(), SessionManager.getsessiondurationmillis());
 
             close();
         }).dimensions(centerX - 50, centerY + 40, 100, 20).build());
